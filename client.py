@@ -20,7 +20,7 @@ if __name__ == "__main__":
         objectId = root.get_child(["0:Objects"])
         print("OBJ List: ", objectId)
 
-        #IMPORTANT
+        # IMPORTANT
         # Aqui ele retorna os nodos filhos, Root, FoolderType, Server e aqueles criados no servidor
         # Os parametros da funcao filtram os objetos
         # mas provavelmente terei que separa os objetos do servidor dos objetos criados no servidor (q eu quero)
@@ -31,13 +31,20 @@ if __name__ == "__main__":
         for node in references:
             print("+_+_+_+_+_+_+_+_+_+_+")
             print("node ",node)
-            print("node.get_browse_name: ",node.get_browse_name())
+            browse_name = node.get_browse_name()
+            # NamespaceIndex = 0 => Node Padrao do OPC UA
+            # NamespaceIndex != 0 => Node criado no servidor
+            print("node.get_browse_name: ",browse_name)
             print("node.get_variables: ",node.get_variables())
             print("node.get_display_name: ",node.get_display_name())
             print("node.get_children: ",node.get_children())
-            #TODO Testar a execucao de um metodo
-            print("node.get_methods: ",node.get_methods())
             print("node.get_parent: ",node.get_parent())
+
+            # Testar a execucao de um metodo
+            methods = node.get_methods()
+            print("node.get_methods: ",methods)
+            # if len(methods)>0:
+            #     root.call_method(methods[0], 10)
             print("+++++++++++++")
 
                     
