@@ -1,4 +1,4 @@
-# This code from https://github.com/FreeOpcUa
+# This is basee in https://github.com/FreeOpcUa
 from opcua import Client, Node
 from opcua.ua import BrowseDirection, NodeClass, DataChangeNotification
 import time
