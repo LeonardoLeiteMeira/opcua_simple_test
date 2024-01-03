@@ -6,7 +6,8 @@ from datetime import datetime
 import random
 sys.path.insert(0, "..")
 
-ADDRESS = "leonardo.local"
+ADDRESS = "localhost"
+# ADDRESS = "leonardo.local"
 
 
 def get_set_temperature(variable_to_update):
@@ -67,13 +68,13 @@ try:
     while True:
         time.sleep(2)
         machine_last_update_var1.set_value(datetime.now())
-        machine_last_update_var2.set_value(datetime.now())
+        # machine_last_update_var2.set_value(datetime.now())
 
         # Remove comments to update the value of the variables on server
         sensor_value = random.randint(0, 100)/10
-        # sensor_value_var5.set_value(sensor_value)
+        sensor_value_var5.set_value(sensor_value)
 
-        sensor_value = random.randint(0, 100)/10
+        # sensor_value = random.randint(0, 100)/10
         # sensor_value_var4.set_value(sensor_value)
 finally:
     #close connection, remove subcsriptions, etc
