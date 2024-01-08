@@ -1,6 +1,6 @@
 # This is basee in https://github.com/FreeOpcUa
 from opcua import Client, Node
-from opcua.ua import BrowseDirection, NodeClass, DataChangeNotification
+from opcua.ua import BrowseDirection, NodeClass, DataChangeNotification, EventFilter, ObjectIds
 import time
 import sys
 import random
@@ -63,6 +63,18 @@ if __name__ == "__main__":
         subscription = client.create_subscription(500, SubHandler())
         node_vars = [node.get_variables() for node in custom_nodes]
         handles = [subscription.subscribe_data_change(node_var) for node_var in node_vars]
+
+        time.sleep(3)
+
+        # print("======== Events ========")
+        # This code is not working
+        # event_filter = EventFilter()
+        # event_filter.add_select_clause(ObjectIds.ConditionType_ConditionName)
+        # event_filter.add_select_clause(ObjectIds.ConditionType_Severity)
+        # event_filter.add_select_clause(ObjectIds.ConditionType_Message)
+        # event_filter.add_select_clause(ObjectIds.ConditionType_ConditionState)
+
+
 
         time.sleep(3)
 

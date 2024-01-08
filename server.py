@@ -30,7 +30,7 @@ def adjust_temperature(parent, value):
 server = Server()
 server.set_endpoint(f"opc.tcp://{ADDRESS}:3009")
 server.set_server_name("Test OPC UA Server")
-enums = server.load_enums()
+
 # setup our own namespace, not really necessary but should as spec
 uri1 = "Leonardo"
 uri2 = "Maju"
@@ -62,7 +62,20 @@ method = machine4Obj.add_method(idx2, "AdjustTemperature", get_set_temperature(s
 #+++++++++++++++++++++++++++++++++
 
 
+# Creating a event
+# etype = server.create_custom_event_type(idx1, 'TemperatureEvent', ua.ObjectIds.BaseEventType, ['ExceedsLimit'])
+# etype.add_property(2, 'ExceedsLimit', ua.Variant(False, ua.VariantType.Boolean))
+
+
 server.start()
+
+## Trigger a event
+# event = server.get_event_generator(etype, server.nodes.objects)
+# event.event.Severity = 500
+# event.event.Message = ua.LocalizedText("Temperature exceeds limit.")
+# event.event.ExceedsLimit = True
+# event.trigger()
+
 try:
     count = 0
     while True:
