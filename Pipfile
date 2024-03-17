@@ -8,6 +8,7 @@ freeopcua = "*"
 cryptography = "*"
 opcua = "*"
 asyncua = "*"
+pika = "*"
 
 [dev-packages]
 

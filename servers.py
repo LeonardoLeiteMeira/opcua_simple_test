@@ -8,7 +8,8 @@ import sys
 sys.path.insert(0, "..")
 
 ADDRESS = "localhost"
-PORTS = [3010, 3011, 3012, 3013, 3014, 3015, 3016]
+PORTS = [3010]
+# PORTS = [3010, 3011, 3012, 3013, 3014, 3015, 3016]
 
 def create_server(port):
     server = Server()
@@ -25,11 +26,11 @@ def create_server(port):
 
     temperature_obj = objects.add_object(sensor_namespace, "Temperature Sensor")
     sensor_value = random.randint(0, 100) / 10
-    temperature_sensor_var = temperature_obj.add_variable(sensor_namespace, "value", sensor_value)
+    temperature_sensor_var = temperature_obj.add_variable(sensor_namespace, "value do temperatura", sensor_value)
     temperature_sensor_var.set_writable()
 
     status_obj = objects.add_object(metadata_namespace, "Status")
-    sensor_value_var = status_obj.add_variable(metadata_namespace, "value", True)
+    sensor_value_var = status_obj.add_variable(metadata_namespace, "value do status", True)
     sensor_value_var.set_writable()
 
     server.start()
