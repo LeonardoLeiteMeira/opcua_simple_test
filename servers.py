@@ -1,5 +1,5 @@
 # This code have the objective to create a list of OPC UA servers to test a client with multiple connections.
-from opcua import Server
+from opcua import Server, ua
 import threading
 import time
 import random
@@ -10,6 +10,17 @@ sys.path.insert(0, "..")
 ADDRESS = "localhost"
 PORTS = [3010]
 # PORTS = [3010, 3011, 3012, 3013, 3014, 3015, 3016]
+
+def get_set_interval(variable_to_update):
+    def set_interval(parent, value):
+        print("New Method")
+        print("Changing temperature to:", value)
+        print("Parent:", parent)
+        variable_to_update.set_value(value)
+        print("++++++++")
+        return [ua.Variant(value, ua.VariantType.Float)]
+
+    return set_interval
 
 def create_server(port):
     server = Server()
@@ -27,7 +38,11 @@ def create_server(port):
     temperature_obj = objects.add_object(sensor_namespace, "Temperature Sensor")
     sensor_value = random.randint(0, 100) / 10
     temperature_sensor_var = temperature_obj.add_variable(sensor_namespace, "value do temperatura", sensor_value)
+    temperature_colect_interval = temperature_obj.add_variable(sensor_namespace, "Intervalo de coleta", 10.0)
+    temperature_obj_method = temperature_obj.add_method(sensor_namespace, "SetInterval", get_set_interval(temperature_colect_interval), [ua.VariantType.Float], [ua.VariantType.Float])
     temperature_sensor_var.set_writable()
+    temperature_colect_interval.set_writable()
+
 
     status_obj = objects.add_object(metadata_namespace, "Status")
     sensor_value_var = status_obj.add_variable(metadata_namespace, "value do status", True)
@@ -36,7 +51,8 @@ def create_server(port):
     server.start()
     try:
         while True:
-            time.sleep(2)
+            temperature_colect_interval_value = temperature_colect_interval.get_value()
+            time.sleep(temperature_colect_interval_value)
             sensor_value = random.randint(0, 100) / 10
             temperature_sensor_var.set_value(sensor_value)
             print(f"{port} New Value on {port}: {sensor_value}", flush=True)
