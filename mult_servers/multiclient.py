@@ -1,4 +1,4 @@
-from client import SubHandler
+from initial_tests.client import SubHandler
 from custom_queue import RabbitmqPublisher
 import asyncio
 from asyncua import Client
@@ -49,13 +49,10 @@ async def subscribe_to_node(port:int):
             node_obj = client.get_node(node.nodeid)
             browse_name = await node_obj.read_browse_name()
             print(f"+++++++++++++")
-            print(f"Node: {node} - {browse_name.Name}")        
+            print(f"Node: {node} - {browse_name.Name}")
             print(f"+++++++++++++")
 
     return client, subscription, handles
-
-
-
 
 async def main():
     ADDRESS = "localhost"

@@ -18,9 +18,9 @@ class SubHandler:
         # print("New data received: ", data)
         # print("Data Change: ", data_change)
         # print("\n")
-        asyncio.create_task(self.data_change_notification(node, data, data_change, self.server_port, self.client))
+        asyncio.create_task(self.execute(node, data, data_change, self.server_port, self.client))
 
-    async def data_change_notification(self, node:Node, val, data:DataChangeNotification, port, client:Client):
+    async def execute(self, node:Node, val, data:DataChangeNotification, port, client:Client):
         node_obj = client.get_node(node.nodeid)
         browse_name = await node_obj.read_browse_name()
         sensor_name = browse_name.Name

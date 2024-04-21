@@ -9,12 +9,11 @@ sys.path.insert(0, "..")
 
 ADDRESS = "localhost"
 PORTS = [3010]
-# PORTS = [3010, 3011, 3012, 3013, 3014, 3015, 3016]
 
 def get_set_interval(variable_to_update):
     def set_interval(parent, value):
         print("New Method")
-        print("Changing temperature to:", value)
+        print("Changing value to:", value)
         print("Parent:", parent)
         variable_to_update.set_value(value)
         print("++++++++")
