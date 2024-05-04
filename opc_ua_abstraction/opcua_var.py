@@ -6,6 +6,10 @@ class OpcuaVar:
         self.__node = node
         self.handle_value = handle_value
 
+    @property
+    def node(self):
+        return self.__node
+
     async def create(self):
         try:
             self.name = (await self.__node.read_browse_name()).Name

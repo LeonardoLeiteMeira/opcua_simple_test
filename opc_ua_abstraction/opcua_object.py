@@ -13,21 +13,15 @@ class OpcuaObject:
 
     @property
     def var_names(self):
-        if(self.__node_vars == None):
+        if self.__node_vars is None:
             return []
-        var_names = []
-        for var in self.__node_vars:
-            var_names.append(var.name)
-        return var_names
+        return [var.name for var in self.__node_vars]
 
     @property
     def method_names(self):
         if(self.__node_methods == None):
             return []
-        method_names = []
-        for method in self.__node_methods:
-            method_names.append(method.name)
-        return method_names
+        return [method.name for method in self.__node_methods]
 
     async def create(self):
         try:

@@ -4,6 +4,7 @@
 from asyncua import Client
 from asyncua.ua import BrowseDirection, NodeClass
 # from datetime import datetime
+from opcua_var import OpcuaVar
 from opcua_object import OpcuaObject
 from subscription_manager import SubscriptionManager
     
@@ -24,7 +25,7 @@ class ClientNode:
         return self.__port
     
     @property
-    def get_subscription(self):
+    def subscriptions(self):
         return [sub["name"] for sub in self.__subscriptions]
     
     @property
@@ -42,36 +43,42 @@ class ClientNode:
             object_nodes = [node for node in references if node.nodeid.NamespaceIndex != 0]
 
             for object in object_nodes:
-                # TODO verificar pq o append ta sem marcacao
                 obj = OpcuaObject(object, self.__client)
                 await obj.create()
                 self.__object_nodes.append(obj)
         except Exception as e:
-            print("Error has occurred in client node!")
-            print(e)
+            error = f"Error has occurred to client node! {e}"
+            print(error)
+            raise Exception(error)
+
+    def get_object(self, name:str)->OpcuaObject|None:
+        for obj in self.__object_nodes:
+            if obj.name == name:
+                return obj
+        return None
 
     async def create_subscription(self, interval:int, name:str, handler):
         subscription = await self.__client.create_subscription(interval, handler)
         subData = SubscriptionManager(name, subscription)
         self.__subscriptions.append(subData)
 
-    async def delete_subscriptions(self):
-        if len(self.__subscriptions)==0:
-            return         
-        [sub.delete() for sub in self.__subscriptions]
-
-    # TODO criar um metodo que recebe um node_var e faz a subscricao dele na subscricao recebida
-    async def subscribe_data_change(self, node_var:NodeClass, subscription_name:str):
-        sub = [sub for sub in self.__subscriptions if sub["name"] == subscription_name]
+    async def subscribe_node_var(self, node_var:OpcuaVar, subscription_name:str):
+        sub = [sub for sub in self.__subscriptions if sub.name == subscription_name]
         if len(sub) == 0:
             return
         await sub[0].create_subscription(node_var)
-    
-    def get_object(self, name:str)->OpcuaObject|None:
-        for obj in self.__object_nodes:
-            if obj.name == name:
-                return obj
-        return None
+
+    async def delete_subscription_by_name(self, name:str):
+        sub = [sub for sub in self.__subscriptions if sub["name"] == name]
+        if len(sub) == 0:
+            return
+        sub[0].delete()
+        self.__subscriptions.remove(sub[0])
+
+    async def delete_all_subscriptions(self):
+        if len(self.__subscriptions)==0:
+            return         
+        [sub.delete() for sub in self.__subscriptions]
 
     async def disconnect(self):
         if self.__client != None:

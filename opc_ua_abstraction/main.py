@@ -2,11 +2,13 @@
 import asyncio
 import time
 from client_node import ClientNode
+from sub_handler import SubHandler
 
 
 async def main():
+    port = 3010
     print("Starting Client Node...")
-    client_node = ClientNode(3010)
+    client_node = ClientNode(port)
     await client_node.create()
     print('\n\nLendo os nomes dos objetos')
     obj_names = client_node.objects_names
@@ -32,10 +34,10 @@ async def main():
         temperature = obj.get_var(value_temperature_name)
         
         count = 0
-        while count<11:
-            print('Valor atual: ',await temperature.get_value())
-            time.sleep(1)
-            count+=1
+        # while count<11:
+        #     print('Valor atual: ',await temperature.get_value())
+        #     time.sleep(1)
+        #     count+=1
 
     print('Agora testando a variavel intervalo de coleta\n')
 
@@ -50,11 +52,22 @@ async def main():
     print('\nFazendo a leitura da variavel com o intervalo de coleta alterado\n')
     var_temperature = temperature_sensor.get_var('value do temperatura')
     count = 0
-    while count<11:
-        print('Valor atual: ',await var_temperature.get_value())
-        time.sleep(1)
-        count+=1
+    # while count<11:
+    #     print('Valor atual: ',await var_temperature.get_value())
+    #     time.sleep(1)
+    #     count+=1
 
+    sub_handler = SubHandler(port, client_node.client)
+    await client_node.create_subscription(500, 'Sub1', sub_handler)
+
+    firstObj = client_node.get_object(obj_names[0])
+    var_names = firstObj.var_names
+    var_to_subscribe = firstObj.get_var(var_names[0])
+
+    await client_node.subscribe_node_var(var_to_subscribe, 'Sub1')
+
+    while True:
+        await asyncio.sleep(1)
     
 
 if __name__ == "__main__":

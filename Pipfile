@@ -9,6 +9,7 @@ cryptography = "*"
 opcua = "*"
 asyncua = "*"
 pika = "*"
+aio-pika = "*"
 
 [dev-packages]
 
